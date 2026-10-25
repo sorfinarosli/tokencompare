@@ -55,7 +55,7 @@ COST_BASIS = {
 SAMPLE_TEXTS = {
     "English": "Tokenization is the process of splitting text into smaller units called tokens.",
     "Malay": "Pemprosesan bahasa semula jadi membolehkan komputer memahami bahasa manusia.",
-    "Chinese": "自然语言处理是人工智能的一个重要领域。",
+    "Others": "自然语言处理是人工智能的一个重要领域。",
 }
 
 # --------------------------------------------------------------------------- #
