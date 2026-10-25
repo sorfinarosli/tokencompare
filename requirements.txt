@@ -1,0 +1,11 @@
+streamlit
+tiktoken
+google-genai
+transformers
+altair
+pandas
+pyyaml
+pytest
+
+# anthropic is no longer required: the paid Claude adapter
+# (adapters/claude_tok.py) was replaced by the free Qwen 2.5 tokenizer.

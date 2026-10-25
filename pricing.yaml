@@ -1,0 +1,36 @@
+# Pricing in USD per 1 million INPUT tokens.
+#
+# Each model has:
+#   display_name       - human-friendly name shown in the UI
+#   type               - "api" (paid commercial API) or "open-source" (free)
+#   input_per_million  - USD price per 1,000,000 input tokens
+#   price_source       - the official page the price was copied from
+#   price_date         - the date you last checked that page (audit trail)
+#
+# Prices copied from the official pages on 2026-10-06.
+# NOTE: Gemini 3.8 Flash's input price rises from $0.75 to $1.50 on 2027-01-01
+# (promotional pricing through 2026-12-31). Re-check before that date.
+#
+# Qwen 2.5 is open-source: it runs locally for free, so its price stays 0.0 and
+# the UI shows "Free (self-hosted)".
+
+gpt-4o:
+  display_name: "GPT-4o"
+  type: api
+  input_per_million: 2.5
+  price_source: "https://openai.com/api/pricing/"
+  price_date: "2026-10-06"
+
+gemini-3.8-flash:
+  display_name: "Gemini 3.8 Flash"
+  type: api
+  input_per_million: 0.75
+  price_source: "https://ai.google.dev/gemini-api/docs/pricing"
+  price_date: "2026-10-06"
+
+qwen2.5-0.5b:
+  display_name: "Qwen 2.5"
+  type: open-source
+  input_per_million: 0.0
+  price_source: "https://huggingface.co/Qwen/Qwen2.5-0.5B"
+  price_date: ""
