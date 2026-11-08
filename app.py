@@ -29,7 +29,7 @@ from styles import inject_css, model_color
 # Page config, styles & orchestrator singleton
 # --------------------------------------------------------------------------- #
 
-st.set_page_config(page_title="Tokenization Comparison", page_icon="🔤", layout="wide")
+st.set_page_config(page_title="Multi-Model LLM Tokenization Comparison", layout="wide")
 inject_css()
 
 
