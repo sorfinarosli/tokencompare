@@ -122,8 +122,10 @@ def compute_winners(rows: list[dict]) -> dict:
         winners["most_efficient"] = [
             r["model"] for r in valid if abs(r["chars_per_token"] - max_cpt) < 1e-9
         ]
-
-    priced = [r for r in valid if has_price(r["model"])]
+    priced = [
+    r for r in valid
+    if not is_open_source(r["model"]) and has_price(r["model"])
+]
     if priced:
         min_cost = min(estimate(r["model"], r["tokens"]) for r in priced)
         winners["cheapest"] = [
