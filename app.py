@@ -215,9 +215,10 @@ def render_input_section() -> str:
 
 
 def render_single_tab(cost_mult: int) -> None:
+    render_empty_state()
     text = render_input_section()
+
     if "last_results" not in st.session_state:
-        render_empty_state()
         return
 
     if st.session_state.get("last_text") != text:
