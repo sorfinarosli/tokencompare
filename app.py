@@ -146,7 +146,6 @@ def render_hero() -> None:
 def render_empty_state() -> None:
     st.markdown(
         '<div class="empty-state">'
-        '<div style="font-size:1.6rem;">🔤</div>'
         '<div style="font-weight:700;font-size:1.1rem;color:#0f172a;">'
         "Compare how three LLMs tokenize the same text</div>"
         '<div class="step"><div class="step-num">1</div><div class="step-title">Type or paste text</div>'
