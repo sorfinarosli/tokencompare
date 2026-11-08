@@ -209,7 +209,7 @@ def comparison_insights(rows: list[dict]) -> list[str]:
                 f"{names(cheapest)} tie for the lowest API price "
                 f"(${min_price:.2f} per 1M input tokens)."
             )
-       if free_models:
+    if free_models:
         insights.append(
             f"{names(free_models)} uses a local tokenizer. "
             "No API inference pricing is configured, so its estimated cost is shown as N/A."
@@ -274,12 +274,12 @@ def _card(r: dict, winners: dict, multiplier: int) -> str:
         date = info.get("price_date", "")
     src_line = f'<div class="cost-source">Source: {src}' + (f" · {date}" if date else "") + "</div>"
 
-   if r["cached"]:
-    pill = '<span class="pill pill-cached">⚡ Cached</span>'
-elif r["model"] == "gemini-3.8-flash":
-    pill = '<span class="pill pill-live">🌐 API Token Count</span>'
-else:
-    pill = '<span class="pill pill-live">💻 Local Tokenizer</span>'
+    if r["cached"]:
+        pill = '<span class="pill pill-cached">⚡ Cached</span>'
+    elif r["model"] == "gemini-3.8-flash":
+        pill = '<span class="pill pill-live">🌐 API Token Count</span>'
+    else:
+        pill = '<span class="pill pill-live">💻 Local Tokenizer</span>'
     
     badges = ""
     for key, label in (
