@@ -272,11 +272,13 @@ def _card(r: dict, winners: dict, multiplier: int) -> str:
         date = info.get("price_date", "")
     src_line = f'<div class="cost-source">Source: {src}' + (f" · {date}" if date else "") + "</div>"
 
-    pill = (
-        '<span class="pill pill-cached">⚡ Cached</span>'
-        if r["cached"]
-        else '<span class="pill pill-live">🌐 Live API</span>'
-    )
+   if r["cached"]:
+    pill = '<span class="pill pill-cached">⚡ Cached</span>'
+elif r["model"] == "gemini-3.8-flash":
+    pill = '<span class="pill pill-live">🌐 API Token Count</span>'
+else:
+    pill = '<span class="pill pill-live">💻 Local Tokenizer</span>'
+    
     badges = ""
     for key, label in (
         ("fewest_tokens", "🏆 Fewest tokens"),
@@ -514,7 +516,12 @@ def table_display(rows: list[dict], multiplier: int) -> pd.DataFrame:
     if is_open_source(r["model"])
     else short_source(get_model_info(r["model"]).get("price_source", ""))
 ),
-                "Status": "⚠️ Error" if r["error"] else ("⚡ Cached" if r["cached"] else "🌐 Live"),
+                "Status": (
+    "⚠️ Error" if r["error"]
+    else "⚡ Cached" if r["cached"]
+    else "🌐 API Token Count" if r["model"] == "gemini-3.8-flash"
+    else "💻 Local Tokenizer"
+),
             }
         )
     return pd.DataFrame(data)
