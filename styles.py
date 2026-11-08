@@ -14,9 +14,9 @@ import streamlit as st
 
 #: Canonical model key -> brand colour (hex).
 MODEL_COLORS = {
-    "gpt-4o": "#10b981",          # green  (emerald)
-    "gemini-3.8-flash": "#3b82f6",  # blue
-    "qwen2.5-0.5b": "#8b5cf6",      # purple (violet)
+    "gpt-4o": "#7652B5",          # Primary purple
+    "gemini-3.8-flash": "#A78BFA", # Light violet
+    "qwen2.5-0.5b": "#C084FC",    # Orchid purple
 }
 
 #: Fallback for any model key we don't recognise.
@@ -62,6 +62,27 @@ def chip_colours(model: str) -> tuple[str, str]:
 
 _CSS = """
 <style>
+/* --- Purple & White application theme --- */
+.stApp {
+    background-color: #FAF8FF;
+    color: #25213A;
+}
+
+[data-testid="stSidebar"] {
+    background-color: #F3EFFF;
+}
+
+.stButton > button[kind="primary"] {
+    background-color: #7652B5;
+    color: #FFFFFF;
+    border-color: #7652B5;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background-color: #62419B;
+    color: #FFFFFF;
+    border-color: #62419B;
+}
 /* --- base ---------------------------------------------------------------- */
 html, body, [class*="css"] {
     font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
@@ -70,19 +91,19 @@ html, body, [class*="css"] {
 
 /* --- hero header ---------------------------------------------------------- */
 .hero { margin-bottom: 1.4rem; }
-.hero-title { font-size: 2.1rem; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; margin: 0; }
+.hero-title { font-size: 2.1rem; font-weight: 800; color: #25213A; letter-spacing: -0.02em; margin: 0; }
 .hero-subtitle { color: #475569; font-size: 1.02rem; margin-top: 0.3rem; }
 .hero-badges { margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .badge {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 999px;
+    background: #ffffff; border: 1px solid #E6DDF5; border-radius: 999px;
     padding: 0.28rem 0.8rem; font-size: 0.82rem; font-weight: 600; color: #334155;
 }
 .badge .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
 /* --- bordered input container -------------------------------------------- */
 .input-box {
-    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px;
+    background: #ffffff; border: 1px solid #E6DDF5; border-radius: 14px;
     padding: 1.1rem 1.3rem 1.3rem; box-shadow: 0 1px 2px rgba(15,23,42,0.04);
 }
 .char-counter { text-align: right; color: #94a3b8; font-size: 0.8rem; margin-top: 0.25rem; }
@@ -106,7 +127,7 @@ html, body, [class*="css"] {
 .card-head { margin-bottom: 0.6rem; }
 .card-title { font-size: 1rem; font-weight: 700; line-height: 1.2; }
 .card-version { font-size: 0.75rem; color: #94a3b8; font-family: 'Consolas', 'Courier New', monospace; margin-top: 0.15rem; }
-.card-tokens { font-size: 2.4rem; font-weight: 800; color: #0f172a; line-height: 1.05; }
+.card-tokens { font-size: 2.4rem; font-weight: 800; color: #25213A; line-height: 1.05; }
 .card-unit { color: #64748b; font-size: 0.8rem; font-weight: 600; }
 .card-meta { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; color: #334155; }
 .meta-row { display: flex; justify-content: space-between; gap: 0.5rem; }
@@ -156,26 +177,26 @@ html, body, [class*="css"] {
     text-align: center;
 }
 .step-num {
-    width: 34px; height: 34px; border-radius: 50%; background: #4f46e5; color: #fff;
+    width: 34px; height: 34px; border-radius: 50%; background: #7652B5; color: #fff;
     display: inline-flex; align-items: center; justify-content: center;
     font-weight: 800; margin-bottom: 0.4rem;
 }
-.step-title { font-weight: 700; color: #0f172a; }
+.step-title { font-weight: 700; color: #25213A; }
 .step-desc { font-size: 0.85rem; color: #64748b; }
 
 /* --- comparison insights --------------------------------------------------- */
 .insights-box {
-    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px;
+    background: #ffffff; border: 1px solid #E6DDF5; border-radius: 12px;
     padding: 1rem 1.2rem; margin: 0.6rem 0 1rem;
 }
-.insights-title { font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; font-size: 1rem; }
+.insights-title { font-weight: 700; color: #25213A; margin-bottom: 0.5rem; font-size: 1rem; }
 .insight { color: #334155; font-size: 0.92rem; margin: 0.35rem 0; line-height: 1.5; }
 .insight-note { color: #94a3b8; font-size: 0.8rem; margin-top: 0.7rem; font-style: italic; }
-.section-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 1.1rem 0 0.6rem; }
+.section-title { font-size: 1.1rem; font-weight: 700; color: #25213A; margin: 1.1rem 0 0.6rem; }
 
 /* --- sidebar tweaks ------------------------------------------------------- */
 .sidebar-section { margin-bottom: 1rem; }
-.sidebar-section .title { font-weight: 700; color: #0f172a; margin-bottom: 0.3rem; }
+.sidebar-section .title { font-weight: 700; color: #25213A; margin-bottom: 0.3rem; }
 .pricing-line { font-size: 0.78rem; color: #475569; margin: 0.15rem 0; }
 </style>
 """
