@@ -62,38 +62,19 @@ def chip_colours(model: str) -> tuple[str, str]:
 
 _CSS = """
 <style>
-/* --- Purple + White Application Theme --- */
+/* --- Purple & White Application Theme --- */
 
 .stApp {
-    background: linear-gradient(
-        135deg,
-        #50358A 0%,
-        #6F4DA8 50%,
-        #8B69BD 100%
-    );
-    background-attachment: fixed;
-    color: #FFFFFF;
+    background-color: #FAF8FF;
+    color: #25213A;
 }
 
 /* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #4B327C;
+    background-color: #F3EFFF;
 }
 
-/* Primary buttons */
-.stButton > button[kind="primary"] {
-    background-color: #7652B5;
-    color: #FFFFFF;
-    border-color: #7652B5;
-}
-
-.stButton > button[kind="primary"]:hover {
-    background-color: #62419B;
-    color: #FFFFFF;
-    border-color: #62419B;
-}
-
-/* --- Primary Buttons --- */
+/* Primary Buttons */
 .stButton > button[kind="primary"] {
     background-color: #7652B5;
     color: #FFFFFF;
@@ -113,8 +94,19 @@ html, body, [class*="css"] {
 
 /* --- hero header ---------------------------------------------------------- */
 .hero { margin-bottom: 1.4rem; }
-.hero-title { font-size: 2.1rem; font-weight: 800; color: #25213A; letter-spacing: -0.02em; margin: 0; }
-.hero-subtitle { color: #475569; font-size: 1.02rem; margin-top: 0.3rem; }
+.hero-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #25213A;
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.hero-subtitle {
+    color: #475569;
+    font-size: 1.02rem;
+    margin-top: 0.3rem;
+}
 .hero-badges { margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .badge {
     display: inline-flex; align-items: center; gap: 0.4rem;
@@ -220,75 +212,6 @@ html, body, [class*="css"] {
 .sidebar-section { margin-bottom: 1rem; }
 .sidebar-section .title { font-weight: 700; color: #25213A; margin-bottom: 0.3rem; }
 .pricing-line { font-size: 0.78rem; color: #475569; margin: 0.15rem 0; }
-/* --- Purple Theme: Text Readability --- */
-
-/* Main title and subtitle */
-.hero-title {
-    color: #FFFFFF !important;
-}
-
-.hero-subtitle {
-    color: #F0E9FA !important;
-}
-
-/* Tab labels */
-.stApp button[data-baseweb="tab"] {
-    color: #F0E9FA !important;
-}
-
-.stApp button[data-baseweb="tab"][aria-selected="true"] {
-    color: #FFFFFF !important;
-    border-bottom-color: #FFFFFF !important;
-}
-
-/* General Streamlit widget labels */
-.stApp [data-testid="stWidgetLabel"] p {
-    color: #FFFFFF !important;
-}
-
-/* Input fields */
-.stApp textarea,
-.stApp input {
-    background-color: #FFFFFF !important;
-    color: #25213A !important;
-    -webkit-text-fill-color: #25213A !important;
-}
-
-/* Secondary buttons */
-.stApp .stButton > button[kind="secondary"] {
-    background-color: #FFFFFF;
-    color: #25213A !important;
-    border: 1px solid #E6DDF5;
-}
-
-.stApp .stButton > button[kind="secondary"] p {
-    color: #25213A !important;
-}
-
-/* Primary buttons */
-.stApp .stButton > button[kind="primary"] p {
-    color: #FFFFFF !important;
-}
-
-/* Text inside white cards */
-.model-card,
-.model-card .card-tokens,
-.model-card .card-meta,
-.model-card .meta-value,
-.insights-box,
-.empty-state {
-    color: #25213A;
-}
-
-/* Section headings outside cards */
-.section-title {
-    color: #FFFFFF !important;
-}
-
-/* Character counter */
-.char-counter {
-    color: #F0E9FA;
-}
 </style>
 """
 
