@@ -1,19 +1,14 @@
-"""Streamlit dashboard for the Multi-Model LLM Tokenization Comparison System.
+"""Streamlit dashboard for the LLM Tokenization Comparison System.
 
 This is the presentation layer. The heavy HTML/CSS/chart building lives in
 ``components.py`` and ``styles.py``; the tokenization logic lives in
 ``orchestrator.py`` and the ``adapters/`` package.
 """
 
-from pathlib import Path
-
-import altair as alt
-import pandas as pd
 import streamlit as st
 
 from components import (
     build_rows,
-    color_scale,
     render_breakdown,
     render_cards,
     render_charts,
@@ -29,7 +24,7 @@ from styles import inject_css, model_color
 # Page config, styles & orchestrator singleton
 # --------------------------------------------------------------------------- #
 
-st.set_page_config(page_title="Multi-Model LLM Tokenization Comparison", layout="wide")
+st.set_page_config(page_title="LLM Tokenization Comparison", layout="wide")
 inject_css()
 
 
@@ -73,20 +68,6 @@ def render_sidebar() -> int:
             unsafe_allow_html=True,
         )
 
-        # --- cache ---
-        st.markdown('<div class="sidebar-section"><div class="title">Cache</div>', unsafe_allow_html=True)
-        rate = orchestrator.hit_rate
-        st.progress(rate, text=f"Cache hit rate: {rate:.0%}")
-        st.markdown(
-            f"💾 API calls saved: **{orchestrator.cache_hits}** &nbsp;·&nbsp; "
-            f"Total lookups: {orchestrator.cache_hits + orchestrator.cache_misses}",
-            unsafe_allow_html=True,
-        )
-        if st.button("Clear cache", width="stretch"):
-            orchestrator.clear_cache()
-            st.success("Cache cleared.")
-        st.markdown("</div>", unsafe_allow_html=True)
-
         # --- cost basis ---
         st.markdown('<div class="sidebar-section"><div class="title">Cost basis</div>', unsafe_allow_html=True)
         cost_basis = st.selectbox(
@@ -129,7 +110,7 @@ def render_hero() -> None:
     )
     st.markdown(
         f'<div class="hero">'
-        f'<div class="hero-title">Multi-Model LLM Tokenization Comparison</div>'
+        f'<div class="hero-title">LLM Tokenization Comparison</div>'
         f'<div class="hero-subtitle">Compare token counts, cost and efficiency of GPT-4o, '
         f'Gemini and Qwen 2.5 — side by side.</div>'
         f'<div class="hero-badges">{badges}</div>'
@@ -253,104 +234,10 @@ def render_single_tab(cost_mult: int) -> None:
 
 
 # --------------------------------------------------------------------------- #
-# Batch tab
-# --------------------------------------------------------------------------- #
-
-
-def render_batch() -> None:
-    st.markdown(
-        "Upload a CSV with columns `category,text` (or load the sample file). "
-        "Each row is tokenized by all three models."
-    )
-    sample_path = Path(__file__).resolve().parent / "samples" / "sample_texts.csv"
-
-    uploaded = st.file_uploader("Choose a CSV file", type=["csv"])
-    use_sample = st.button("Or load the bundled sample file")
-
-    df_in = None
-    if uploaded is not None:
-        df_in = pd.read_csv(uploaded)
-    elif use_sample and sample_path.exists():
-        df_in = pd.read_csv(sample_path)
-
-    if df_in is None:
-        st.info("Upload a CSV or load the sample file to begin.")
-        return
-
-    if set(df_in.columns) != {"category", "text"}:
-        st.error("The CSV must have exactly the columns 'category' and 'text'.")
-        return
-
-    rows = []
-    progress = st.progress(0.0, text="Tokenizing…")
-    total = len(df_in)
-    for i, row in df_in.iterrows():
-        cat, text = row["category"], row["text"]
-        for r in orchestrator.compare(text):
-            rows.append(
-                {
-                    "Category": cat,
-                    "Model": display_name(r["model"]),
-                    "Tokens": r["tokens"],
-                    "Error": r["error"],
-                }
-            )
-        progress.progress((i + 1) / total)
-    progress.empty()
-
-    combined = pd.DataFrame(rows)
-    combined["Tokens"] = pd.to_numeric(combined["Tokens"], errors="coerce").astype("Int64")
-
-    # --- summary ------------------------------------------------------------
-    total_texts = len(df_in)
-    successful = int(combined["Tokens"].notna().sum())
-    failed = int(combined["Error"].notna().sum())
-    avg = combined.groupby("Model")["Tokens"].mean().round(1).reset_index()
-    avg.columns = ["Model", "Average tokens"]
-
-    m1, m2, m3 = st.columns(3)
-    m1.metric("Input texts", total_texts)
-    m2.metric("Successful comparisons", successful)
-    m3.metric("Failed comparisons", failed)
-
-    st.markdown("**Average tokens per model**")
-    st.dataframe(avg, width="stretch", hide_index=True)
-
-    st.subheader("Combined results")
-    st.dataframe(combined[["Category", "Model", "Tokens", "Error"]], width="stretch", hide_index=True)
-
-    chart_df = combined[combined["Tokens"].notna()]
-    chart = (
-        alt.Chart(chart_df)
-        .mark_bar()
-        .encode(
-            x=alt.X("Category:N", sort=None, axis=alt.Axis(labelAngle=0, title="Category")),
-            y=alt.Y("Tokens:Q", axis=alt.Axis(title="Tokens")),
-            xOffset="Model:N",
-            color=alt.Color("Model:N", scale=color_scale(), title="Model"),
-            tooltip=["Category:N", "Model:N", "Tokens:Q"],
-        )
-        .properties(title="Tokens by category and model", height=320)
-    )
-    st.altair_chart(chart, width="stretch")
-
-    st.download_button(
-        "Download results (CSV)",
-        combined.to_csv(index=False),
-        file_name="batch_tokenization_results.csv",
-        mime="text/csv",
-    )
-
-
-# --------------------------------------------------------------------------- #
 # Main flow
 # --------------------------------------------------------------------------- #
 
 cost_mult = render_sidebar()
 render_hero()
 
-tab_single, tab_batch = st.tabs(["Single input", "Batch mode"])
-with tab_single:
-    render_single_tab(cost_mult)
-with tab_batch:
-    render_batch()
+render_single_tab(cost_mult)
