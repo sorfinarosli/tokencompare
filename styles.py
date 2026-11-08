@@ -207,6 +207,75 @@ html, body, [class*="css"] {
 .sidebar-section { margin-bottom: 1rem; }
 .sidebar-section .title { font-weight: 700; color: #25213A; margin-bottom: 0.3rem; }
 .pricing-line { font-size: 0.78rem; color: #475569; margin: 0.15rem 0; }
+/* --- Navy Theme: Text Readability Fix --- */
+
+/* Main heading and subtitle */
+.hero-title {
+    color: #FFFFFF !important;
+}
+
+.hero-subtitle {
+    color: #CBD5E1 !important;
+}
+
+/* Input labels and general Streamlit text */
+.stApp [data-testid="stWidgetLabel"] p,
+.stApp .stMarkdown > div > p {
+    color: #E2E8F0;
+}
+
+/* Tab labels */
+.stApp button[data-baseweb="tab"] {
+    color: #CBD5E1 !important;
+}
+
+.stApp button[data-baseweb="tab"][aria-selected="true"] {
+    color: #C4B5FD !important;
+}
+
+/* Text input and textarea */
+.stApp textarea,
+.stApp input {
+    color: #25213A !important;
+    background-color: #FFFFFF !important;
+    -webkit-text-fill-color: #25213A !important;
+}
+
+/* Secondary button labels */
+.stApp .stButton > button[kind="secondary"] {
+    background-color: #FFFFFF;
+    color: #25213A !important;
+    border: 1px solid #D8CDEA;
+}
+
+.stApp .stButton > button[kind="secondary"] p {
+    color: #25213A !important;
+}
+
+/* Primary button labels */
+.stApp .stButton > button[kind="primary"] p {
+    color: #FFFFFF !important;
+}
+
+/* Keep model cards readable */
+.model-card,
+.model-card .card-tokens,
+.model-card .card-meta,
+.model-card .meta-value {
+    color: #25213A;
+}
+
+/* Text inside white containers */
+.input-box,
+.insights-box,
+.empty-state {
+    color: #25213A;
+}
+
+/* Character counter */
+.char-counter {
+    color: #CBD5E1;
+}
 </style>
 """
 
