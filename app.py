@@ -67,7 +67,7 @@ def render_sidebar() -> int:
     """Render the sidebar; return the selected cost multiplier."""
     with st.sidebar:
         st.markdown(
-            '<div class="sidebar-section"><div class="title">🔤 TokenCompare</div>'
+            '<div class="sidebar-section"><div class="title">LLM Tokenization Comparison</div>'
             '<div style="font-size:0.8rem;color:#64748b;">'
             "A multi-model LLM tokenization comparison dashboard.</div></div>",
             unsafe_allow_html=True,
