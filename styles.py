@@ -62,22 +62,35 @@ def chip_colours(model: str) -> tuple[str, str]:
 
 _CSS = """
 <style>
-/* --- Navy Blue + Purple + White Theme --- */
+/* --- Purple + White Application Theme --- */
 
 .stApp {
     background: linear-gradient(
         135deg,
-        #101D38 0%,
-        #172747 50%,
-        #101D38 100%
+        #50358A 0%,
+        #6F4DA8 50%,
+        #8B69BD 100%
     );
     background-attachment: fixed;
     color: #FFFFFF;
 }
 
-/* --- Sidebar --- */
+/* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #172747;
+    background-color: #4B327C;
+}
+
+/* Primary buttons */
+.stButton > button[kind="primary"] {
+    background-color: #7652B5;
+    color: #FFFFFF;
+    border-color: #7652B5;
+}
+
+.stButton > button[kind="primary"]:hover {
+    background-color: #62419B;
+    color: #FFFFFF;
+    border-color: #62419B;
 }
 
 /* --- Primary Buttons --- */
@@ -207,74 +220,74 @@ html, body, [class*="css"] {
 .sidebar-section { margin-bottom: 1rem; }
 .sidebar-section .title { font-weight: 700; color: #25213A; margin-bottom: 0.3rem; }
 .pricing-line { font-size: 0.78rem; color: #475569; margin: 0.15rem 0; }
-/* --- Navy Theme: Text Readability Fix --- */
+/* --- Purple Theme: Text Readability --- */
 
-/* Main heading and subtitle */
+/* Main title and subtitle */
 .hero-title {
     color: #FFFFFF !important;
 }
 
 .hero-subtitle {
-    color: #CBD5E1 !important;
-}
-
-/* Input labels and general Streamlit text */
-.stApp [data-testid="stWidgetLabel"] p,
-.stApp .stMarkdown > div > p {
-    color: #E2E8F0;
+    color: #F0E9FA !important;
 }
 
 /* Tab labels */
 .stApp button[data-baseweb="tab"] {
-    color: #CBD5E1 !important;
+    color: #F0E9FA !important;
 }
 
 .stApp button[data-baseweb="tab"][aria-selected="true"] {
-    color: #C4B5FD !important;
+    color: #FFFFFF !important;
+    border-bottom-color: #FFFFFF !important;
 }
 
-/* Text input and textarea */
+/* General Streamlit widget labels */
+.stApp [data-testid="stWidgetLabel"] p {
+    color: #FFFFFF !important;
+}
+
+/* Input fields */
 .stApp textarea,
 .stApp input {
-    color: #25213A !important;
     background-color: #FFFFFF !important;
+    color: #25213A !important;
     -webkit-text-fill-color: #25213A !important;
 }
 
-/* Secondary button labels */
+/* Secondary buttons */
 .stApp .stButton > button[kind="secondary"] {
     background-color: #FFFFFF;
     color: #25213A !important;
-    border: 1px solid #D8CDEA;
+    border: 1px solid #E6DDF5;
 }
 
 .stApp .stButton > button[kind="secondary"] p {
     color: #25213A !important;
 }
 
-/* Primary button labels */
+/* Primary buttons */
 .stApp .stButton > button[kind="primary"] p {
     color: #FFFFFF !important;
 }
 
-/* Keep model cards readable */
+/* Text inside white cards */
 .model-card,
 .model-card .card-tokens,
 .model-card .card-meta,
-.model-card .meta-value {
-    color: #25213A;
-}
-
-/* Text inside white containers */
-.input-box,
+.model-card .meta-value,
 .insights-box,
 .empty-state {
     color: #25213A;
 }
 
+/* Section headings outside cards */
+.section-title {
+    color: #FFFFFF !important;
+}
+
 /* Character counter */
 .char-counter {
-    color: #CBD5E1;
+    color: #F0E9FA;
 }
 </style>
 """
