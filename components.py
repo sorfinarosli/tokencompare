@@ -123,9 +123,9 @@ def compute_winners(rows: list[dict]) -> dict:
             r["model"] for r in valid if abs(r["chars_per_token"] - max_cpt) < 1e-9
         ]
     priced = [
-    r for r in valid
-    if not is_open_source(r["model"]) and has_price(r["model"])
-]
+        r for r in valid
+        if not is_open_source(r["model"]) and has_price(r["model"])
+    ]
     if priced:
         min_cost = min(estimate(r["model"], r["tokens"]) for r in priced)
         winners["cheapest"] = [
@@ -209,11 +209,11 @@ def comparison_insights(rows: list[dict]) -> list[str]:
                 f"{names(cheapest)} tie for the lowest API price "
                 f"(${min_price:.2f} per 1M input tokens)."
             )
-    if free_models:
+       if free_models:
         insights.append(
-        f"{names(free_models)} uses a local tokenizer. "
-        "No API inference pricing is configured, so its estimated cost is shown as N/A."
-    )
+            f"{names(free_models)} uses a local tokenizer. "
+            "No API inference pricing is configured, so its estimated cost is shown as N/A."
+        )
 
     # --- limitations --------------------------------------------------------
     if errored:
@@ -511,19 +511,21 @@ def table_display(rows: list[dict], multiplier: int) -> pd.DataFrame:
                 "Estimated cost": "—"
                 if r["error"]
                 else format_cost(r["model"], r["tokens"], multiplier),
-                "Price source": "—"
-                if r["error"]
-                else (
-    "N/A (Local Tokenizer)"
-    if is_open_source(r["model"])
-    else short_source(get_model_info(r["model"]).get("price_source", ""))
-),
+                "Price source": (
+                    "—"
+                    if r["error"]
+                    else "N/A (Local Tokenizer)"
+                    if is_open_source(r["model"])
+                    else short_source(
+                        get_model_info(r["model"]).get("price_source", "")
+                    )
+                ),
                 "Status": (
-    "⚠️ Error" if r["error"]
-    else "⚡ Cached" if r["cached"]
-    else "🌐 API Token Count" if r["model"] == "gemini-3.8-flash"
-    else "💻 Local Tokenizer"
-),
+                    "⚠️ Error" if r["error"]
+                    else "⚡ Cached" if r["cached"]
+                    else "🌐 API Token Count" if r["model"] == "gemini-3.8-flash"
+                    else "💻 Local Tokenizer"
+                ),
             }
         )
     return pd.DataFrame(data)
