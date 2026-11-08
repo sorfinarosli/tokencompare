@@ -62,16 +62,25 @@ def chip_colours(model: str) -> tuple[str, str]:
 
 _CSS = """
 <style>
-/* --- Purple & White application theme --- */
+/* --- Navy Blue + Purple + White Theme --- */
+
 .stApp {
-    background-color: #FAF8FF;
-    color: #25213A;
+    background: linear-gradient(
+        135deg,
+        #101D38 0%,
+        #172747 50%,
+        #101D38 100%
+    );
+    background-attachment: fixed;
+    color: #FFFFFF;
 }
 
+/* --- Sidebar --- */
 [data-testid="stSidebar"] {
-    background-color: #F3EFFF;
+    background-color: #172747;
 }
 
+/* --- Primary Buttons --- */
 .stButton > button[kind="primary"] {
     background-color: #7652B5;
     color: #FFFFFF;
