@@ -102,9 +102,9 @@ def render_sidebar() -> int:
             src = info.get("price_source", "")
             date = info.get("price_date", "") or "not set"
             if typ == "open-source":
-                label = "Free (self-hosted)"
+                label = "N/A (Local Tokenizer)"
             elif price_per_million(m) > 0:
-                label = f"${price_per_million(m):,.2f} / 1M tokens"
+                label = f"${price_per_million(m):,.2f} / 1M input tokens"
             else:
                 label = "Price not set"
             st.markdown(
