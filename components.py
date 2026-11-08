@@ -46,18 +46,18 @@ def fmt_money(value: float) -> str:
 
 
 def format_cost(model: str, tokens: int, multiplier: int) -> str:
-    """Human-readable cost for a model. Never shows a bare ``$0.00``."""
+    """Display estimated API cost, or N/A when pricing is unavailable."""
     if is_open_source(model):
-        return "Free (self-hosted)"
+        return "N/A (Local Tokenizer)"
     if not has_price(model):
         return "Price not set"
     return fmt_money(estimate(model, tokens) * multiplier)
 
 
 def numeric_cost(model: str, tokens: int, multiplier: int):
-    """Numeric cost for charting (None when the price is unset)."""
+    """Numeric API cost; None when no API pricing is configured."""
     if is_open_source(model):
-        return 0.0
+        return None
     if not has_price(model):
         return None
     return estimate(model, tokens) * multiplier
@@ -208,7 +208,10 @@ def comparison_insights(rows: list[dict]) -> list[str]:
                 f"(${min_price:.2f} per 1M input tokens)."
             )
     if free_models:
-        insights.append(f"{names(free_models)} is open-source and runs for free (self-hosted).")
+        insights.append(
+        f"{names(free_models)} uses a local tokenizer. "
+        "No API inference pricing is configured, so its estimated cost is shown as N/A."
+    )
 
     # --- limitations --------------------------------------------------------
     if errored:
@@ -261,8 +264,12 @@ def _card(r: dict, winners: dict, multiplier: int) -> str:
     cost = format_cost(r["model"], r["tokens"], multiplier)
     method = TOKENIZER_METHOD.get(r["model"], "—")
     info = get_model_info(r["model"])
-    src = short_source(info.get("price_source", ""))
-    date = info.get("price_date", "")
+    if is_open_source(r["model"]):
+        src = "N/A (Local Tokenizer)"
+        date = ""
+    else:
+        src = short_source(info.get("price_source", ""))
+        date = info.get("price_date", "")
     src_line = f'<div class="cost-source">Source: {src}' + (f" · {date}" if date else "") + "</div>"
 
     pill = (
@@ -502,7 +509,11 @@ def table_display(rows: list[dict], multiplier: int) -> pd.DataFrame:
                 else format_cost(r["model"], r["tokens"], multiplier),
                 "Price source": "—"
                 if r["error"]
-                else short_source(get_model_info(r["model"]).get("price_source", "")),
+                else (
+    "N/A (Local Tokenizer)"
+    if is_open_source(r["model"])
+    else short_source(get_model_info(r["model"]).get("price_source", ""))
+),
                 "Status": "⚠️ Error" if r["error"] else ("⚡ Cached" if r["cached"] else "🌐 Live"),
             }
         )
