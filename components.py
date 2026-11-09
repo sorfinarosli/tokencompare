@@ -361,9 +361,16 @@ def render_breakdown(rows: list[dict]) -> None:
             if r["pieces"]:
                 st.markdown(render_chips_html(r), unsafe_allow_html=True)
             else:
+                if r["model"] == "gemini-3.8-flash":
+                    message = (
+                        "Token-level breakdown is unavailable. The Gemini token-counting "
+                        "API returns a total token count but does not provide individual "
+                        "token pieces or token IDs through this integration."
+                    )
+                else:
+                    message = "Token-level breakdown is unavailable for this model."
                 st.markdown(
-                    f'<div class="no-pieces">Token pieces are not available — {r["display_name"]} uses a '
-                    f'proprietary server-side tokenizer, so the API exposes only a total token count.</div>',
+                    f'<div class="no-pieces">{html.escape(message)}</div>',
                     unsafe_allow_html=True,
                 )
     st.caption(
@@ -419,7 +426,8 @@ def _bar(df: pd.DataFrame, y: str, title: str, ytitle: str, fmt: str) -> alt.Cha
 
 def render_charts(rows: list[dict], multiplier: int) -> None:
     df = chart_df(rows, multiplier)
-    cost_df = df[df["Cost"].notna()]
+    # Keep all models in the cost chart; missing prices are N/A, not zero.
+    unpriced_df = df[df["Cost"].isna()]
 
     c1, c2 = st.columns(2)
     with c1:
@@ -432,10 +440,25 @@ def render_charts(rows: list[dict], multiplier: int) -> None:
 
     c3, c4 = st.columns(2)
     with c3:
-        st.altair_chart(
-            _bar(cost_df, "Cost", "Estimated cost per model", "Cost (USD)", ".8~f"),
-            width="stretch",
-        )
+        cost_chart = _bar(df, "Cost", "Estimated cost per model", "Cost (USD)", ".8~f")
+        if not unpriced_df.empty:
+            na_labels = (
+                alt.Chart(unpriced_df)
+                .mark_text(fontSize=13, fontWeight="bold", color="#64748b")
+                .encode(
+                    x=alt.X("Model:N", sort=None),
+                    y=alt.value(285),
+                    text=alt.value("N/A"),
+                    tooltip=[alt.Tooltip("Model:N", title="Model")],
+                )
+            )
+            cost_chart = cost_chart + na_labels
+        st.altair_chart(cost_chart, width="stretch")
+        if not unpriced_df.empty:
+            st.caption(
+                "N/A means API inference pricing is not configured for this model. "
+                "Local tokenization may still incur infrastructure costs."
+            )
     with c4:
         st.altair_chart(
             _bar(df, "Chars per token", "Efficiency per model", "Chars per token", ".2f"),
