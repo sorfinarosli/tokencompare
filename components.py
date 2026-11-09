@@ -426,8 +426,14 @@ def _bar(df: pd.DataFrame, y: str, title: str, ytitle: str, fmt: str) -> alt.Cha
 
 def render_charts(rows: list[dict], multiplier: int) -> None:
     df = chart_df(rows, multiplier)
-    # Keep all models in the cost chart; missing prices are N/A, not zero.
-    unpriced_df = df[df["Cost"].isna()]
+    # Explicit category domain retains models with unavailable API prices.
+    model_order = df["Model"].tolist()
+    cost_df = df.copy()
+    cost_df["Cost label"] = cost_df["Cost"].apply(
+        lambda value: "N/A" if pd.isna(value) else fmt_money(value)
+    )
+    cost_df["Cost plot"] = cost_df["Cost"].fillna(0.0)
+    missing_cost = cost_df["Cost"].isna().any()
 
     c1, c2 = st.columns(2)
     with c1:
@@ -440,24 +446,39 @@ def render_charts(rows: list[dict], multiplier: int) -> None:
 
     c3, c4 = st.columns(2)
     with c3:
-        cost_chart = _bar(df, "Cost", "Estimated cost per model", "Cost (USD)", ".8~f")
-        if not unpriced_df.empty:
-            na_labels = (
-                alt.Chart(unpriced_df)
-                .mark_text(fontSize=13, fontWeight="bold", color="#64748b")
-                .encode(
-                    x=alt.X("Model:N", sort=None),
-                    y=alt.value(285),
-                    text=alt.value("N/A"),
-                    tooltip=[alt.Tooltip("Model:N", title="Model")],
-                )
-            )
-            cost_chart = cost_chart + na_labels
+        x_cost = alt.X(
+            "Model:N",
+            sort=model_order,
+            scale=alt.Scale(domain=model_order),
+            axis=alt.Axis(labelAngle=0, title=None, labelFontSize=12),
+        )
+        bars = alt.Chart(cost_df).mark_bar(
+            cornerRadiusTopLeft=4, cornerRadiusTopRight=4
+        ).encode(
+            x=x_cost,
+            y=alt.Y("Cost plot:Q", axis=alt.Axis(title="Cost (USD)", grid=True)),
+            color=alt.Color("Model:N", scale=color_scale(), legend=None),
+            tooltip=[
+                alt.Tooltip("Model:N", title="Model"),
+                alt.Tooltip("Cost label:N", title="Estimated cost"),
+            ],
+        )
+        labels = alt.Chart(cost_df).mark_text(
+            dy=-12, fontSize=12, fontWeight="bold", color="#7254b5"
+        ).encode(
+            x=x_cost,
+            y=alt.Y("Cost plot:Q"),
+            text=alt.Text("Cost label:N"),
+        )
+        cost_chart = (bars + labels).properties(
+            title=alt.Title("Estimated cost per model", fontSize=14, fontWeight=600),
+            height=300,
+        )
         st.altair_chart(cost_chart, width="stretch")
-        if not unpriced_df.empty:
+        if missing_cost:
             st.caption(
-                "N/A means API inference pricing is not configured for this model. "
-                "Local tokenization may still incur infrastructure costs."
+                "N/A = no configured API inference price. Local tokenization "
+                "may still incur infrastructure costs."
             )
     with c4:
         st.altair_chart(
